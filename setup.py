@@ -13,9 +13,9 @@ import src as pyngs
 # name becomes the name of the installation tarball.
 name = 'pyngs'
 
-author = pyngs.author
+author = pyngs.__author__
 
-author_email = pyngs.author_email
+author_email = pyngs.__author_email__
 
 # version gets appended to the end of the tarball name.
 __version__ = pyngs.__version__
@@ -31,11 +31,9 @@ packages = ['pyngs',                    # the root package
 # "description" may be a short, summary description of the package
 description = 'Next Generation Sequencing Toolkits in Python'
 
-
 # "long_description" may be valid ReStructuredText which will be turned into
 # HTML when displayed
-long_description = open('readme.rst', 'r').read()
-
+long_description = open('README.txt', 'r').read()
 
 # "platforms" a list of platforms
 # platforms = ['Linux', 'Windwos', 'Mac']
