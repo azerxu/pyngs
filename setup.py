@@ -50,6 +50,8 @@ if __name__ == '__main__':
         author=author,
         author_email=author_email,
         url='https://github.com/azerxu/pyngs', # github project url
+        package_dir=package_dir,
+        packages=packages,
         description=description,
         long_description=long_description,
         platforms=platforms,
