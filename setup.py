@@ -4,7 +4,7 @@
 # **********************************************************************
 # file: setup.py
 #
-# ngs package install script
+# pyngs package install script
 # **********************************************************************
 
 from distutils.core import setup
