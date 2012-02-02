@@ -7,7 +7,7 @@
 # pyngs package install script
 # **********************************************************************
 
-from distutils.core import setup
+from distutils.core import setup, Extension
 import src as pyngs
 import os
 
@@ -49,6 +49,8 @@ platforms = 'any'
 # license for the package
 license_ = 'MIT'
 
+calign_ext = Extension('pyngs.calign', sources=['src/calignmodule.c'])
+
 
 if __name__ == '__main__':
     setup(
@@ -59,6 +61,7 @@ if __name__ == '__main__':
         url='https://github.com/azerxu/pyngs', # github project url
         package_dir=package_dir,
         packages=packages,
+        ext_modules=[calign_ext],
         description=description,
         long_description=long_description,
         platforms=platforms,
