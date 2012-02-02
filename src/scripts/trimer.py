@@ -181,7 +181,7 @@ def trim_pair(pair1, pair2, **kwargs):
         tag = os.path.splitext(os.path.basename(pair1))[0]
 
     good1 = open(name_temp.format(tag, method, qthres, lthres, 'good', '1'), 'w')
-    good1 = open(name_temp.format(tag, method, qthres, lthres, 'good', '2'), 'w')
+    good2 = open(name_temp.format(tag, method, qthres, lthres, 'good', '2'), 'w')
     bad1 = open(name_temp.format(tag, method, qthres, lthres, 'bad', '1'), 'w')
     bad2 = open(name_temp.format(tag, method, qthres, lthres, 'bad', '2'), 'w')
     log = open('{0}.{1}.q{2}l{3}.log'.format(tag, method, qthres, lthres), 'w')
