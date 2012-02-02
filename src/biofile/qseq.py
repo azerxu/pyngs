@@ -53,7 +53,7 @@ def parse(qseqfile, fmt='I'):
         # if fil value is 1 pass filter, 0 not
         fil = 'N' if fil == '1' else 'Y'
 
-        if fmt in PHRED64:
+        if fmt in PHRED64_FORMAT:
             # trans phred64 quality to phred33 quality
             qual = qual.translate(table_64_to_33)
 
