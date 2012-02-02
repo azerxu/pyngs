@@ -8,7 +8,7 @@
 # annotation SNP
 # **********************************************************************
 
-from libgene import Exon, Gene
+from pyngs.lib.libgene import Exon, Gene
 
 # **********************************************************************
 # Below block is parse ucsc record
