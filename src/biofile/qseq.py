@@ -23,6 +23,7 @@ According to Illumina manual qseq files have the following format:
 
 from fastq import Fastq
 from xopen import xopen
+from string import maketrans
 
 
 PHRED64_FORMAT = set(("SOLEXA", "ILLUMINA", "PHRED64",
