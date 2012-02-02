@@ -9,6 +9,8 @@
 
 from distutils.core import setup
 import src as pyngs
+import os
+
 
 # name becomes the name of the installation tarball.
 name = 'pyngs'
@@ -27,6 +29,11 @@ package_dir = {'pyngs': 'src'}
 packages = ['pyngs',                    # the root package
             'pyngs.biofile',            # parse all kinds of bio format file
             ]
+
+# loading scripts
+script_dir = 'src/scripts'
+scripts = [os.path.join(script_dir, script).format(script)
+           for script in os.listdir(script_dir)]
 
 # "description" may be a short, summary description of the package
 description = 'Next Generation Sequencing Toolkits in Python'
@@ -55,6 +62,7 @@ if __name__ == '__main__':
         description=description,
         long_description=long_description,
         platforms=platforms,
+        scripts=scripts,
         license = license_
         )
 
