@@ -49,7 +49,7 @@ platforms = 'any'
 # license for the package
 license_ = 'MIT'
 
-calign_ext = Extension('pyngs.calign', sources=['src/calignmodule.c'])
+calign_ext = Extension('pyngs.lib.calign', sources=['src/lib/calignmodule.c'])
 
 
 if __name__ == '__main__':
