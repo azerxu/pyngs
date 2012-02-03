@@ -28,6 +28,7 @@ package_dir = {'pyngs': 'src'}
 # packages are A list naming all the packages to include.
 packages = ['pyngs',                    # the root package
             'pyngs.biofile',            # parse all kinds of bio format file
+            'pyngs.lib',                # parse all kinds of base modules
             ]
 
 # loading scripts
