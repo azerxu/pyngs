@@ -196,7 +196,7 @@ def trim_pair(pair1, pair2, **kwargs):
             print >>bad2, fq2
         print >>log, '\t'.join((str(mark), fq1.name, fq2.name))
 
-    for out in (good, bad, log):
+    for out in (good1, good2, bad1, bad2, log):
         out.close()
 
 
