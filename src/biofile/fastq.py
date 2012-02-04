@@ -5,8 +5,6 @@
 # file: fastq.py
 # **********************************************************************
 
-
-
 '''Parse Fastq File library
 
 Reference: SURVEY AND SUMMARY The Sanger FASTQ file format for sequences
@@ -109,8 +107,8 @@ PHRED64_OFFSET = 64                       # Solexa or Illumina offset
 
 
 # fastq format set
-PHRED33_FORMAT = set(('S', 'SANGER', 'PHRED33'))
-PHRED64_FORMAT = set(("SOLEXA", "ILLUMINA", "PHRED64",
+PHRED33_TYPE = set(('S', 'SANGER', 'PHRED33'))
+PHRED64_TYPE = set(("SOLEXA", "ILLUMINA", "PHRED64",
                       "ILLUMINA1.3", "ILLUMINA1.5",
                       "ILL1.3", "ILL1.5",
                       'X', 'I', 'J'))
@@ -177,7 +175,7 @@ def phred33to64():
     return maketrans(_33, _64)
 
 
-def parse(fname, fmt='S'):
+def parse(fname, qtype='S'):
     """parse fastq file and return a iterator
     standard is a mark to show whether format to trans to standard
     """
@@ -186,7 +184,7 @@ def parse(fname, fmt='S'):
     name = ''
     slen = qlen = 0
 
-    if fmt in PHRED64_FORMAT:
+    if qtype in PHRED64_TYPE:
         need_trans = True
         trans = phred64to33
     else:
@@ -256,10 +254,10 @@ def parse(fname, fmt='S'):
         yield Fastq(name, seq, qual)
 
 
-def read(fname, fmt='S'):
+def read(fname, qtype='S'):
     """read a fastq record from fastq file"""
     try:
-        return parse(fname, fmt=fmt).next()
+        return parse(fname, qtype=qtype).next()
     except StopIteration:
         raise ValueError("Empty fastq file: {0}".format(fname))
 
