@@ -90,6 +90,47 @@ MASK_DUPLICATE = 0x400   # PCR or optical duplicate
 #         return flen
 
 
+class Flag(object):
+    """
+    ======================================================================
+    FLAG: bitwise FLAG. Each bit is explained in the following table:
+    ====    ==============================================================
+    Bit     Description
+    ====    ==============================================================
+    0x1     template having multiple fragments in sequencing
+    0x2     each fragment properly aligned according to the aligner
+    0x4     fragment unmapped
+    0x8     next fragment in the template unmapped
+    0x10    SEQ being reverse complemented
+    0x20    SEQ of the next fragment in the template being reversed
+    0x40    the first fragment in the template
+    0x80    the last fragment in the template
+    0x100   secondary alignment
+    0x200   not passing quality controls
+    0x400   PCR or optical duplicate
+    ======================================================================
+    """
+    def __init__(self, flag):
+        self._flag = int(flag)
+
+    def __repr__(self):
+        return str(self._flag)
+
+    @property
+    def qstrand(self):                  # query reads strand
+        """0x10: SEQ being reverse complemented"""
+        return REVERSE_STRAND if self.flag & MASK_REVERSE else FORWARD_STRAND
+
+    @property
+    def mstrand(self):                  # mate reads strand
+        """0x20: SEQ of the next fragment in the template being reversed"""
+        return (REVERSE_STRAND if self.flag & MASK_MATE_REVERSE
+                else FORWARD_STRAND)
+
+
+
+
+
 class Sam(object):
     """
     ===========================================================================
@@ -111,25 +152,7 @@ class Sam(object):
     11  QUAL  String  [!-~]+                   ASCII of Phred-scaled base
                                                QUALity+33
     ===========================================================================
-
-    FLAG: bitwise FLAG. Each bit is explained in the following table:
-    ====    =======================================================
-    Bit     Description
-    ====    =======================================================
-    0x1     template having multiple fragments in sequencing
-    0x2     each fragment properly aligned according to the aligner
-    0x4     fragment unmapped
-    0x8     next fragment in the template unmapped
-    0x10    SEQ being reverse complemented
-    0x20    SEQ of the next fragment in the template being reversed
-    0x40    the first fragment in the template
-    0x80    the last fragment in the template
-    0x100   secondary alignment
-    0x200   not passing quality controls
-    0x400   PCR or optical duplicate
-    ====    =======================================================
     """
-
     def __init__(self, qname, flag, rname, pos, mapq, cigar,
                  rnext, pnext, tlen, seq, qual, tags):
         self.qname = qname              # Query template Name
@@ -146,15 +169,17 @@ class Sam(object):
         self.seq = seq                  # fragment Sequence
         self.qual = qual                # ascii of phred-scaled base quality+33
         self._tags = {}                 # store tags of sam mapping
-        self.deal_tags(tags)
+        self._parse_tags(tags)
 
     def __repr__(self):
+        pos = '*' if self.pos == -1 else self.pos + 1
+        pnex = '*' if self.pnext == -1 else self.pnext + 1
         return '\t'.join(
-            map(str, [self.qname, self.flag, self.rname, self.pos+1,
-                      self.mapq, self.cigar, self.rnext, self.pnext+1,
+            map(str, [self.qname, self.flag, self.rname, pos,
+                      self.mapq, self.cigar, self.rnext, pnex,
                       self.tlen, self.seq, self.qual] + self.tags))
 
-    def deal_tags(self, tags):
+    def _parse_tags(self, tags):
         for tag in tags:
             key, tp, val = tag.split(':')
             self._tags[key] = (tp, val)
@@ -316,6 +341,38 @@ class Sam(object):
         return _tags
 
 
+class SamFile(object):
+    def __init__(self, filename, header, handle, offset):
+        self.filename = filename
+        self.header = header
+        self._offset = offset
+        self._handle = handle
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        while True:
+            line = self._handle.readline()
+            if not line:
+                raise StopIteration
+            line = line.rstrip()
+            if line:
+                return _parse_line(line)
+
+    def __repr__(self):
+        return '<SamFile Object filename:{0}>'.format(self.filename)
+
+
+def _parse_line(samline):
+    items = samline.split(TAB)
+    (qname, flag, rname, pos, mapq, cigar, rnext, pnext, tlen,
+     seq, qual) = items[:11]
+    tags = items[11:]
+    return Sam(qname, flag, rname, pos, mapq, cigar, rnext, pnext,
+               tlen, seq, qual, tags)
+
+
 def parse(samfile):
     with open(samfile, 'r') as handle:
         for line in handle:
@@ -324,10 +381,21 @@ def parse(samfile):
             line = line.rstrip()
             if not line:
                 continue
-            items = line.split(TAB)
-            (qname, flag, rname, pos, mapq, cigar, rnext, pnext, tlen,
-             seq, qual) = items[:11]
-            tags = items[11:]
-            yield Sam(qname, flag, rname, pos, mapq, cigar, rnext, pnext,
-                      tlen, seq, qual, tags)
+            yield _parse_line(line)
+
+
+def read(samfile):
+    header = []
+    handle = open(samfile, 'r')
+    offset = 0
+    while True:
+        line = handle.readline()
+        if line.startswith('@'):
+            header.append(line.rstrip())
+            offset = handle.tell()
+        else:
+            break
+
+    handle.seek(offset, 0)
+    return SamFile(samfile, header, handle, offset)
 
