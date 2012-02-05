@@ -351,6 +351,9 @@ class SamFile(object):
     def __iter__(self):
         return self
 
+    def reset(self):
+        self._handle(self._offset, 0)
+
     def next(self):
         while True:
             line = self._handle.readline()
