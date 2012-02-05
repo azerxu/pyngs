@@ -12,8 +12,8 @@ import os
 
 def _get_ftype(fname):
     ext = os.path.splitext(fname)[-1].replace('.', '')
-    if ext == 'pls':
-        return 'blat'
+    if ext == 'blat':
+        return 'psl'
     elif ext in ('fa', 'fna', 'fsa', 'fasta'):
         return 'fasta'
     elif ext in ('fq', 'fastq'):
