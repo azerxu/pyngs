@@ -21,6 +21,7 @@ def consumer(i):
 def _reporter(i, j):
     print 'end:', i, j
 
+
 def reporter(iqueue, nconsumer=1, sentinel=SENTINEL):
     while True:
         item = iqueue.get()

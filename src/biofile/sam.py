@@ -128,9 +128,6 @@ class Flag(object):
                 else FORWARD_STRAND)
 
 
-
-
-
 class Sam(object):
     """
     ===========================================================================
