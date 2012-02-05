@@ -151,7 +151,7 @@ class Sam(object):
     ===========================================================================
     """
     def __init__(self, qname, flag, rname, pos, mapq, cigar,
-                 rnext, pnext, tlen, seq, qual, tags):
+                 rnext, pnext, tlen, seq, qual, *tags):
         self.qname = qname              # Query template Name
         self.flag = int(flag)           # bitwise Flag
         self.rname = rname              # Reference Sequence Name
@@ -370,7 +370,7 @@ def _parse_line(samline):
      seq, qual) = items[:11]
     tags = items[11:]
     return Sam(qname, flag, rname, pos, mapq, cigar, rnext, pnext,
-               tlen, seq, qual, tags)
+               tlen, seq, qual, *tags)
 
 
 def parse(samfile):
