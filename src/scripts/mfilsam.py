@@ -71,13 +71,13 @@ def classify_pair(line1, line2, nm=2):  # consumer
             mark = ONEMAP
         elif read1.xt == 'N' or read2.xt == 'N': # map in N block
             mark = NREGION
-        elif 'S' in read1.cigar or 'S' in read2.cigar: # soft clip in reads
-            mark = SOFT
         elif not read1.mapq or not read2.mapq: # mapped in repeat region
             mark =  REPEAT
         elif read1.rname != read2.rname:
             # reads mapping to two scaffold
             mark = CROSS
+        elif 'S' in read1.cigar or 'S' in read2.cigar: # soft clip in reads
+            mark = SOFT
         elif read1.xt == 'M' or read2.xt == 'M': # one read is use bwasw
             mark = MATESW
         elif (read1.x0 > 1 or read2.x0 > 1 or
